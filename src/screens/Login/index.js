@@ -12,21 +12,24 @@ class Login extends Component {
         password: ""
     }
 
-    _login() {
+    async _login() {
         const { email, password } = this.state
-        this.props.navigation.navigate('App')
-        // console.log(email, password)
-        // axios.post(`${api}/login`, {
-        //     email: email,
-        //     password: password
-        // }).then(response => {
-        //     console.log('login response------------>', response.data)
-        //     alert('User successfully Login')
-        // }).catch(err => {
-        //     console.log('login error---------->', err.response.data.message)
-        //     alert(err.response.data.message)
-        // })
+        console.log(email, password)
+
+        await axios.post(`${api}/login`, {
+            email: email,
+            password: password
+        }).then(response => {
+            console.log('login response------------>', response.data)
+            alert('User successfully Login')
+            this.props.navigation.navigate('App')
+        }).catch(err => {
+            console.log('login error---------->', err.response.data.message)
+            alert(err.response.data.message)
+        })
     }
+
+
 
     render() {
         const { containerStyle, logoContainer, logo, loginFormContainer, createAccountContainer } = styles

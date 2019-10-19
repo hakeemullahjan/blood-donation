@@ -1,12 +1,49 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, ScrollView, Picker, ActivityIndicator } from 'react-native';
 import { Header, Card, CardSection, Input, Button, TextArea } from '../../components/common'
+import axios from 'axios'
+import api from './../../config/api'
 
 
 class PostRequirement extends Component {
 
+    state = {
+        bloodGroup: "",
+        units: 0,
+        urgency: "",
+        country: "",
+        state: "",
+        city: "",
+        hospital: "",
+        contactNo: "",
+        instructions: ""
+    }
+
+    _post() {
+        const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions } = this.state
+
+        axios.post(`${api}/post/bloodrequirement`, {
+            bloodGroup,
+            units,
+            urgency,
+            country,
+            state,
+            city,
+            hospital,
+            contactNo,
+            instructions
+
+        }).then(response => {
+            console.log('signup response-------', response.data)
+            alert('Account Successfully Created!')
+        }).catch(err => {
+            console.log('signup error----------->', err)
+        })
+    }
+
     render() {
         const { containerStyle, createFormContainer, drawerStyle, drawerViewStyle } = styles
+        const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions } = this.state
         return (
             <ScrollView style={containerStyle}>
                 <KeyboardAvoidingView enabled behavior='padding' >
@@ -18,7 +55,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={bloodGroup}
                                         style={drawerStyle}
 
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
@@ -43,7 +80,7 @@ class PostRequirement extends Component {
                                     drawerViewStyle
                                 }>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={urgency}
                                         style={
                                             drawerStyle
                                         }
@@ -64,7 +101,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={state}
                                         style={drawerStyle}
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
@@ -79,7 +116,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={city}
                                         style={drawerStyle}
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
@@ -94,7 +131,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={hospital}
                                         style={drawerStyle}
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
@@ -109,7 +146,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        selectedValue={country}
                                         style={drawerStyle}
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
@@ -124,7 +161,7 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        //selectedValue={bloodGroup}
+                                        // selectedValue={}
                                         style={drawerStyle}
                                     //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
@@ -137,15 +174,15 @@ class PostRequirement extends Component {
                             </CardSection>
 
                             <CardSection>
-                                <Input placeholder='03XXXXXXXXX' label='Contact no.' returnKeyType='next' />
+                                <Input placeholder='03XXXXXXXXX' value={contactNo} label='Contact no.' returnKeyType='next' />
                             </CardSection>
 
                             <CardSection>
-                                <TextArea placeholder='info' label='Addional Instructions' />
+                                <TextArea placeholder='info' value={instructions} label='Addional Instructions' />
                             </CardSection>
 
                             <CardSection>
-                                <Button >Post</Button>
+                                <Button onPress={this._post.bind(this)} >Post</Button>
                             </CardSection>
                         </Card>
                     </View>
