@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, 
 import { Header, Card, CardSection, Input, Button, TextArea } from '../../components/common'
 import axios from 'axios'
 import api from './../../config/api'
+import { Appbar, Drawer } from "react-native-paper";
+import { DrawerActions } from 'react-navigation-drawer';
 
 
 class PostRequirement extends Component {
@@ -48,7 +50,16 @@ class PostRequirement extends Component {
             <ScrollView style={containerStyle}>
                 <KeyboardAvoidingView enabled behavior='padding' >
 
-                    <Header headerText='POST' />
+                    <Appbar.Header >
+                        <Appbar.Action
+                            icon="menu"
+                            onPress={() =>
+                                this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+                            }
+                        />
+                        <Appbar.Content title="" />
+                    </Appbar.Header>
+
                     <View style={createFormContainer}>
                         <Card>
 

@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
+import { Header, Card, CardSection, Button } from '../../components/common'
+import axios from 'axios'
+import api from '../../config/api'
+import { Appbar, Drawer } from "react-native-paper";
+import { DrawerActions } from 'react-navigation-drawer';
 
 
 class Notification extends Component {
     render() {
         return (
             <View>
-                <Text>NOTIFICATION</Text>
+
+                <Appbar.Header >
+                    <Appbar.Action
+                        icon="menu"
+                        onPress={() =>
+                            this.props.navigation.dispatch(DrawerActions.toggleDrawer())
+                        }
+                    />
+                    <Appbar.Content title="Notifications" />
+                </Appbar.Header>
+
             </View>
         )
     }

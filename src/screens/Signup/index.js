@@ -3,36 +3,41 @@ import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, 
 import { Input, Card, CardSection, Button, Spinner } from '../../components/common'
 import api from '../../config/api'
 import axios from 'axios'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 class Signup extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            bloodGroup: "",
-            password: "",
-        }
+    state = {
+        firstName: "",
+        lastName: "",
+        email: "",
+        bloodGroup: "",
+        password: "",
     }
 
     _signup() {
         const { firstName, lastName, email, password, bloodGroup } = this.state
-        // console.log(firstName, lastName, email, password, bloodGroup)
-        axios.post(`${api}/signup`, {
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            bloodGroup: bloodGroup,
-            password: password
-        }).then(response => {
-            console.log('signup response-------', response.data)
-            alert('Account Successfully Created!')
-        }).catch(err => {
-            console.log('signup error----------->', err)
-        })
 
+        if (firstName.length === 0 || lastName.length === 0 || email.length === 0 || password.length === 0 || bloodGroup.length === 0) {
+            this.refs.toast.show('The input can\'t be empty')
+        }
+        else {
+
+        }
+
+        // console.log(firstName, lastName, email, password, bloodGroup)
+        // axios.post(`${api}/signup`, {
+        //     firstName: firstName,
+        //     lastName: lastName,
+        //     email: email,
+        //     bloodGroup: bloodGroup,
+        //     password: password
+        // }).then(response => {
+        //     console.log('signup response-------', response.data)
+        //     alert('Account Successfully Created!')
+        // }).catch(err => {
+        //     console.log('signup error----------->', err)
+        // })
     }
 
     render() {
@@ -61,7 +66,6 @@ class Signup extends Component {
                             <CardSection>
                                 <Input placeholder='user@sectorlink.com' value={email} label='Email' returnKeyType='next' onChangeText={text => this.setState({ email: text })} />
                             </CardSection>
-
 
 
                             <CardSection>
@@ -106,12 +110,15 @@ class Signup extends Component {
                     </View>
 
 
+
                     <View style={gotoSigninStyle}>
                         <Text>Already have an account? </Text>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}  >
                             <Text style={{ color: '#F50041', fontWeight: 'bold' }}>Sign In</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <Toast ref='toast' position='top' />
 
                 </KeyboardAvoidingView>
             </ScrollView >
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 20,
-        flexDirection: 'row',
+        flexDirection: 'column',
         // borderWidth: 1
     }
 })

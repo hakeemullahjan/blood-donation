@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, 
 import { Input, Card, CardSection, Button, Spinner } from '../../components/common'
 import api from '../../config/api'
 import axios from 'axios'
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 
 class Login extends Component {
@@ -13,20 +14,31 @@ class Login extends Component {
     }
 
     async _login() {
+
         const { email, password } = this.state
         console.log(email, password)
+        if (email.length === 0) {
+            this.refs.toast.show('Input your email')
+        } else if (password.length === 0) {
+            this.refs.toast.show('Input your password')
+        } else {
+            this.props.navigation.navigate('HomeScreen')
+            // await axios.post(`${api}/login`, {
+            //     email: email,
+            //     password: password
+            // }).then(response => {
+            //     console.log('login response------------>', response.data)
+            //     this.props.navigation.navigate('HomeScreen', { user: response.data })
+            // }).catch(err => {
+            //     if (err.response.data) {
+            //         console.log('login error---------->', err.response.data.message)
+            //         this.refs.toast.show(err.response.data.message)
+            //     } else {
+            //         console.log(err)
+            //     }
+            // })
+        }
 
-        await axios.post(`${api}/login`, {
-            email: email,
-            password: password
-        }).then(response => {
-            console.log('login response------------>', response.data)
-            alert('User successfully Login')
-            this.props.navigation.navigate('App')
-        }).catch(err => {
-            console.log('login error---------->', err.response.data.message)
-            alert(err.response.data.message)
-        })
     }
 
 
@@ -64,10 +76,12 @@ class Login extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <Toast ref='toast' position='top' />
             </ KeyboardAvoidingView>
         )
     }
 }
+
 
 const styles = StyleSheet.create({
     containerStyle: {
@@ -84,7 +98,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: 400,
-        height: 120,
+        height: 170,
         resizeMode: 'stretch'
     },
     loginFormContainer: {

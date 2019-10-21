@@ -5,6 +5,7 @@ import MyRequests from './MyRequests'
 import PostRequirement from './PostRequirement'
 import Notification from './Notification'
 import Settings from './Settings'
+import AuthLoading from './AuthLoading'
 
 
 export {
@@ -14,5 +15,6 @@ export {
     MyRequests,
     PostRequirement,
     Notification,
-    Settings
+    Settings,
+    AuthLoading
 }

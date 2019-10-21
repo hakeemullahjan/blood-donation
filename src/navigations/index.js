@@ -1,53 +1,121 @@
-import { SafeAreaView, ScrollView, Dimensions } from 'react-native'
-import { createAppContainer, createNavigator, createSwitchNavigator, } from 'react-navigation'
-import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer'
+import React from "react";
+import { ScrollView, Text, Image, View } from "react-native";
+import { Appbar, Drawer } from "react-native-paper";
+import { SafeAreaView } from "react-navigation"; // ⚠ you need the package 'react-navigation'
+import { createAppContainer, createSwitchNavigator, } from 'react-navigation'
+import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
+import { createStackNavigator } from 'react-navigation-stack'
 import * as Router from '../screens'
 
 
-const AuthNavigator = createSwitchNavigator({
+const AuthNavigator = createStackNavigator({
     Login: {
-        screen: Router.Login
+        screen: Router.Login,
+        navigationOptions: {
+            header: null
+        }
     },
     Signup: {
-        screen: Router.Signup
+        screen: Router.Signup,
+        navigationOptions: {
+            header: null
+        }
     }
 })
 
 
-const AppNavigator = createDrawerNavigator({
-    Home: {
-        screen: Router.HomeScreen
+const AppNavigator = createDrawerNavigator(
+    {
+        HomeScreen: {
+            screen: Router.HomeScreen,
+        },
+        MyRequests: {
+            screen: Router.MyRequests
+        },
+        PostRequirement: {
+            screen: Router.PostRequirement
+        },
+        Notification: {
+            screen: Router.Notification
+        },
+        Settings: {
+            screen: Router.Settings
+        }
     },
-    'My Requests': {
-        screen: Router.MyRequests
-    },
-    'Post Requirement': {
-        screen: Router.PostRequirement
-    },
-    Notification: {
-        screen: Router.Notification
-    },
-    Settings: {
-        screen: Router.Settings
+    {
+        initialRouteName: "HomeScreen",
+        contentComponent: props => (
+            < ScrollView >
+                <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}  >
+                    <View style={{ flex: 1, padding: 23 }}>
+                        <Text style={{ fontSize: 23, color: "#F50041", fontWeight: "bold", fontStyle: "italic" }}>Hakeemullah Jan</Text>
+                        <Text style={{ fontSize: 18, color: "#F50041", fontWeight: "bold" }}>A Negative</Text>
+                        <Text style={{ color: "#F50041" }}>user@abc.com</Text>
+                    </View>
+
+                    <Drawer.Item
+                        icon='home'
+                        label='Home'
+                        active="true"
+                        onPress={() => props.navigation.navigate("HomeScreen")}
+
+                    />
+                    <Drawer.Item
+                        icon='inbox'
+                        label="My Requests"
+                        active="true"
+                        onPress={() => props.navigation.navigate("MyRequests")}
+                    />
+                    <Drawer.Item
+                        icon='send'
+                        label="Post Requirement"
+                        active="true"
+                        onPress={() => props.navigation.navigate("PostRequirement")}
+                    />
+                    <Drawer.Item
+                        icon='notifications'
+                        label="Notification"
+                        active="true"
+                        onPress={() => props.navigation.navigate("Notification")}
+                    />
+                    <Drawer.Item
+                        icon='settings'
+                        label="Settings"
+                        active="true"
+                        onPress={() => props.navigation.navigate("Settings")}
+                    />
+                    <Drawer.Item
+                        icon='help'
+                        label="Help & feedback"
+                        active="true"
+                    />
+                    <Drawer.Item
+                        icon='close'
+                        label="Log Out"
+                        active="true"
+                        onPress={() => props.navigation.navigate("Auth")}
+                    />
+                </SafeAreaView>
+            </ScrollView >
+        )
     }
-}, {
-    initialRouteName: 'Home',
-    contentOptions: {
-        activeTintColor: "#F50041"
-    }
-})
+);
+
 
 const MainNavigator = createSwitchNavigator({
+    AuthLoading: {
+        screen: Router.AuthLoading
+    },
     Auth: {
         screen: AuthNavigator
     },
     App: {
         screen: AppNavigator
     },
-
 },
     {
-        initialRouteName: 'Auth'
+        initialRouteName: 'AuthLoading'
     })
 
-export default createAppContainer(MainNavigator)
+
+export default createAppContainer(MainNavigator);
