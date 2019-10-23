@@ -6,7 +6,7 @@ import PostRequirement from './PostRequirement'
 import Notification from './Notification'
 import Settings from './Settings'
 import AuthLoading from './AuthLoading'
-
+import Comment from './Comment'
 
 export {
     Login,
@@ -16,5 +16,6 @@ export {
     PostRequirement,
     Notification,
     Settings,
-    AuthLoading
+    AuthLoading,
+    Comment
 }

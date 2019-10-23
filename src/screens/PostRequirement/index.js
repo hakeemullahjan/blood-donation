@@ -1,31 +1,41 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, ScrollView, Picker, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, ScrollView, Picker, ActivityIndicator, AsyncStorage } from 'react-native';
 import { Header, Card, CardSection, Input, Button, TextArea } from '../../components/common'
 import axios from 'axios'
 import api from './../../config/api'
 import { Appbar, Drawer } from "react-native-paper";
 import { DrawerActions } from 'react-navigation-drawer';
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 
 class PostRequirement extends Component {
 
-    state = {
-        bloodGroup: "",
-        units: 0,
-        urgency: "",
-        country: "",
-        state: "",
-        city: "",
-        hospital: "",
-        contactNo: "",
-        instructions: ""
+    constructor(props) {
+        super(props)
+        this.state = {
+            bloodGroup: "",
+            units: '',
+            urgency: "",
+            country: "",
+            state: "",
+            city: "",
+            hospital: "",
+            contactNo: "",
+            instructions: "",
+            relation: "",
+            user: null
+        }
+        this._getUser();
+
+    }
+
+    async _getUser() {
+        const user = await AsyncStorage.getItem('user');
+        this.setState({ user: JSON.parse(user) })
     }
 
     _post() {
-        const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions } = this.state
-
-        axios.post(`${api}/post/bloodrequirement`, {
-            bloodGroup,
+        const { bloodGroup,
             units,
             urgency,
             country,
@@ -33,19 +43,49 @@ class PostRequirement extends Component {
             city,
             hospital,
             contactNo,
-            instructions
+            instructions,
+            relation, user } = this.state
 
-        }).then(response => {
-            console.log('signup response-------', response.data)
-            alert('Account Successfully Created!')
-        }).catch(err => {
-            console.log('signup error----------->', err)
-        })
+        if (units.length === 0 ||
+            urgency.length === 0 ||
+            country.length === 0 ||
+            state.length === 0 ||
+            city.length === 0 ||
+            hospital.length === 0 ||
+            contactNo.length === 0 ||
+            instructions.length === 0 ||
+            relation.length === 0) {
+            this.refs.toast.show('The input can\'t be empty')
+        } else {
+            axios.post(`${api}/post/bloodrequirement`, {
+                bloodGroup,
+                units,
+                urgency,
+                country,
+                state,
+                city,
+                hospital,
+                contactNo,
+                instructions,
+                relation,
+                email: user.email,
+                fullName: user.firstName + ' ' + user.lastName,
+                createdAt: Date.now()
+            }).then(response => {
+                console.log('signup response-------', response.data)
+                alert('Blood request successfully posted')
+                this.props.navigation.navigate('HomeScreen')
+            }).catch(err => {
+                console.log('post error----------->', err)
+            })
+        }
+
     }
+
 
     render() {
         const { containerStyle, createFormContainer, drawerStyle, drawerViewStyle } = styles
-        const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions } = this.state
+        const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions, relation } = this.state
         return (
             <ScrollView style={containerStyle}>
                 <KeyboardAvoidingView enabled behavior='padding' >
@@ -68,8 +108,7 @@ class PostRequirement extends Component {
                                     <Picker
                                         selectedValue={bloodGroup}
                                         style={drawerStyle}
-
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
                                     >
                                         <Picker.Item label="Blood Group" value="" />
                                         <Picker.Item label="A Positive" value="A Positive" />
@@ -83,19 +122,17 @@ class PostRequirement extends Component {
                             </CardSection>
 
                             <CardSection>
-                                <Input placeholder='e.g. 3' label='Units' returnKeyType='next' />
+                                <Input placeholder='e.g 3' label='Units' value={units} returnKeyType='next' onChangeText={text => this.setState({ units: text })} />
                             </CardSection>
 
                             <CardSection>
-                                <View style={
-                                    drawerViewStyle
-                                }>
+                                <View style={drawerViewStyle}>
                                     <Picker
                                         selectedValue={urgency}
                                         style={
                                             drawerStyle
                                         }
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ urgency: itemValue })}
                                     >
                                         <Picker.Item label="Urgency" value="" />
                                         <Picker.Item label="Urgent" value="Urgent" />
@@ -112,44 +149,61 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        selectedValue={state}
+                                        selectedValue={country}
                                         style={drawerStyle}
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ country: itemValue })}
                                     >
-                                        <Picker.Item label='State' value="" />
-                                        <Picker.Item label="Pakistan" value="Pakistan" />
-                                        <Picker.Item label='India' value='India' />
-                                        <Picker.Item label='Bangladesh' value='Bangladesh' />
+                                        <Picker.Item label='Country' value="" />
+                                        <Picker.Item label='Pakistan' value="Pakistan" />
                                     </Picker>
                                 </View>
                             </CardSection>
+
+
+                            <CardSection>
+                                <View style={drawerViewStyle}>
+                                    <Picker
+                                        selectedValue={state}
+                                        style={drawerStyle}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ state: itemValue })}
+                                    >
+                                        <Picker.Item label="State" value="" />
+                                        <Picker.Item label="Sindh" value="Sindh" />
+
+                                    </Picker>
+                                </View>
+                            </CardSection>
+
 
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
                                         selectedValue={city}
                                         style={drawerStyle}
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue })}
                                     >
                                         <Picker.Item label="City" value="" />
-                                        <Picker.Item label="Pakistan" value="Pakistan" />
-                                        <Picker.Item label='India' value='India' />
-                                        <Picker.Item label='Bangladesh' value='Bangladesh' />
+                                        <Picker.Item label="Karachi" value="Karachi" />
+
                                     </Picker>
                                 </View>
                             </CardSection>
+
+
+
 
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
                                         selectedValue={hospital}
                                         style={drawerStyle}
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ hospital: itemValue })}
                                     >
                                         <Picker.Item label="Hospital" value="" />
-                                        <Picker.Item label="Pakistan" value="Pakistan" />
-                                        <Picker.Item label='India' value='India' />
-                                        <Picker.Item label='Bangladesh' value='Bangladesh' />
+                                        <Picker.Item label="Indus" value="Indus" />
+                                        <Picker.Item label='Abbasi' value='Abbasi' />
+                                        <Picker.Item label='Ziauddin' value='Ziauddin' />
+                                        <Picker.Item label='Jinnah' value='Jinnah' />
                                     </Picker>
                                 </View>
                             </CardSection>
@@ -157,39 +211,29 @@ class PostRequirement extends Component {
                             <CardSection>
                                 <View style={drawerViewStyle}>
                                     <Picker
-                                        selectedValue={country}
+                                        selectedValue={relation}
                                         style={drawerStyle}
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
-                                    >
-                                        <Picker.Item label="Country" value="" />
-                                        <Picker.Item label="Pakistan" value="Pakistan" />
-                                        <Picker.Item label='India' value='India' />
-                                        <Picker.Item label='Bangladesh' value='Bangladesh' />
-                                    </Picker>
-                                </View>
-                            </CardSection>
-
-                            <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        // selectedValue={}
-                                        style={drawerStyle}
-                                    //onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ relation: itemValue })}
                                     >
                                         <Picker.Item label="Relation" value="" />
-                                        <Picker.Item label="Pakistan" value="Pakistan" />
-                                        <Picker.Item label='India' value='India' />
-                                        <Picker.Item label='Bangladesh' value='Bangladesh' />
+                                        <Picker.Item label="Father" value="Father" />
+                                        <Picker.Item label='Brother' value='Brother' />
+                                        <Picker.Item label='Mother' value='Brother' />
+                                        <Picker.Item label='Son' value='Son' />
+                                        <Picker.Item label='Uncle' value='Uncle' />
+                                        <Picker.Item label='Niece' value='Niece' />
+                                        <Picker.Item label='Friend' value='Friend' />
+
                                     </Picker>
                                 </View>
                             </CardSection>
 
                             <CardSection>
-                                <Input placeholder='03XXXXXXXXX' value={contactNo} label='Contact no.' returnKeyType='next' />
+                                <Input placeholder='03XXXXXXXXX' value={contactNo} label='Contact no.' returnKeyType='next' onChangeText={text => this.setState({ contactNo: text })} />
                             </CardSection>
 
                             <CardSection>
-                                <TextArea placeholder='info' value={instructions} label='Addional Instructions' />
+                                <TextArea placeholder='info' value={instructions} label='Addional Instructions' onChangeText={text => this.setState({ instructions: text })} />
                             </CardSection>
 
                             <CardSection>
@@ -198,7 +242,7 @@ class PostRequirement extends Component {
                         </Card>
                     </View>
 
-
+                    <Toast ref='toast' position='top' />
                 </KeyboardAvoidingView>
             </ScrollView >
         )

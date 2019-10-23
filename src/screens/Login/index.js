@@ -22,23 +22,24 @@ class Login extends Component {
         } else if (password.length === 0) {
             this.refs.toast.show('Input your password')
         } else {
-            this.props.navigation.navigate('HomeScreen')
-            // await axios.post(`${api}/login`, {
-            //     email: email,
-            //     password: password
-            // }).then(response => {
-            //     console.log('login response------------>', response.data)
-            //     this.props.navigation.navigate('HomeScreen', { user: response.data })
-            // }).catch(err => {
-            //     if (err.response.data) {
-            //         console.log('login error---------->', err.response.data.message)
-            //         this.refs.toast.show(err.response.data.message)
-            //     } else {
-            //         console.log(err)
-            //     }
-            // })
+            // this.props.navigation.navigate('App')
+            await axios.post(`${api}/users/login`, {
+                email: email,
+                password: password
+            }).then(response => {
+                console.log('login response------------>', response.data)
+                const user = response.data
+                AsyncStorage.setItem('user', JSON.stringify(user));
+                this.props.navigation.navigate('MainScreen', { user: JSON.stringify(user) })
+            }).catch(err => {
+                if (err.response.data) {
+                    console.log('login error---------->', err.response.data.message)
+                    this.refs.toast.show(err.response.data.message)
+                } else {
+                    console.log(err)
+                }
+            })
         }
-
     }
 
 

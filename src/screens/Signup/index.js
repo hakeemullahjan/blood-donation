@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image, ScrollView, Picker, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, AsyncStorage, Image, ScrollView, Picker, ActivityIndicator } from 'react-native';
 import { Input, Card, CardSection, Button, Spinner } from '../../components/common'
 import api from '../../config/api'
 import axios from 'axios'
@@ -22,22 +22,24 @@ class Signup extends Component {
             this.refs.toast.show('The input can\'t be empty')
         }
         else {
-
+            // console.log(firstName, lastName, email, password, bloodGroup)
+            axios.post(`${api}/users/signup`, {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                bloodGroup: bloodGroup,
+                password: password
+            }).then(response => {
+                console.log('signup response-------', response.data)
+                const user = response.data
+                AsyncStorage.setItem('user', JSON.stringify(user));
+                alert('Account successfully created')
+                this.props.navigation.navigate('MainScreen', { user: JSON.stringify(user) })
+            }).catch(err => {
+                console.log('signup error----------->', err)
+            })
         }
 
-        // console.log(firstName, lastName, email, password, bloodGroup)
-        // axios.post(`${api}/signup`, {
-        //     firstName: firstName,
-        //     lastName: lastName,
-        //     email: email,
-        //     bloodGroup: bloodGroup,
-        //     password: password
-        // }).then(response => {
-        //     console.log('signup response-------', response.data)
-        //     alert('Account Successfully Created!')
-        // }).catch(err => {
-        //     console.log('signup error----------->', err)
-        // })
     }
 
     render() {
@@ -108,7 +110,6 @@ class Signup extends Component {
                             </CardSection>
                         </Card>
                     </View>
-
 
 
                     <View style={gotoSigninStyle}>
