@@ -1,7 +1,9 @@
 import React from 'react';
 import Navigation from './navigations/index'
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
-// import { Provider as StoreProvider } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux'
+import reducers from './store/reducers'
 
 const theme = {
     ...DefaultTheme,
@@ -15,11 +17,11 @@ const theme = {
 
 const App = () => {
     return (
-        // <StoreProvider store={store}>
-        <PaperProvider theme={theme}>
-            <Navigation />
-        </PaperProvider>
-        // </StoreProvider>
+        <StoreProvider store={createStore(reducers)}>
+            <PaperProvider theme={theme}>
+                <Navigation />
+            </PaperProvider>
+        </StoreProvider>
     )
 }
 

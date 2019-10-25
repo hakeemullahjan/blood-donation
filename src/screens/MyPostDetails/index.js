@@ -8,7 +8,8 @@ import axios from 'axios'
 import Toast, { DURATION } from 'react-native-easy-toast'
 
 
-class Comment extends Component {
+
+class MyPostDetails extends Component {
 
     constructor(props) {
         super(props)
@@ -43,8 +44,17 @@ class Comment extends Component {
             console.log('comment error------>', err)
             this.refs.toast.show(err)
         })
+    }
+
+    _donatedButtonPress(volunteer) {
+        const { user, post } = this.state
+
 
     }
+    _notDonatedButtonPress() {
+
+    }
+
 
 
 
@@ -61,8 +71,7 @@ class Comment extends Component {
                     <Card>
                         <CardSection>
                             <View style={{ flex: 1, margin: 5, marginLeft: 15, marginRight: 15 }}>
-                                <Text style={{ marginLeft: 'auto', margin: 5 }} >Star Button</Text>
-
+                                <Text style={{ marginLeft: 'auto', margin: 5 }} >Tick Button</Text>
                                 <View style={{ justifyContent: 'space-between', flexDirection: 'row' }} >
                                     <Text style={{ fontWeight: 'bold' }}>{post.fullName}</Text>
                                     <Text>{moment(post.createdAt).fromNow()}</Text>
@@ -92,6 +101,14 @@ class Comment extends Component {
                     <Card>
 
                         {post.volunteers && post.volunteers.map((item, key) => {
+                            let donatedStyle, notDonatedStyle
+                            if (item.status === 'Not Donated') {
+                                notDonatedStyle = { color: '#fff', backgroundColor: "#F50041", padding: 7, borderRadius: 4, borderColor: '#F50041', borderWidth: 1 }
+                                donatedStyle = { backgroundColor: '#fff', color: "#F50041", padding: 7, borderRadius: 4, borderColor: '#F50041', borderWidth: 1 }
+                            } else {
+                                notDonatedStyle = { backgroundColor: '#fff', color: "#F50041", padding: 7, borderRadius: 4, borderColor: '#F50041', borderWidth: 1 }
+                                donatedStyle = { color: '#fff', backgroundColor: "#F50041", padding: 7, borderRadius: 4, borderColor: '#F50041', borderWidth: 1 }
+                            }
                             return (
                                 <View key={key}>
                                     <CardSection>
@@ -99,7 +116,12 @@ class Comment extends Component {
                                             <Text>{item.fullName}</Text>
                                             <Text>{item.bloodGroup}</Text>
                                             <Text>Exchange Donation</Text>
-                                            <Text>{item.status}</Text>
+                                            {/* <Text>{item.status}</Text> */}
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <TouchableOpacity onPress={this._donatedButtonPress.bind(this, item)} style={{ margin: 5 }}><Text style={donatedStyle} >Donated</Text></TouchableOpacity>
+                                                <TouchableOpacity onPress={this._notDonatedButtonPress.bind(this, item)} style={{ margin: 5 }}><Text style={notDonatedStyle}>Not Donated</Text></TouchableOpacity>
+                                            </View>
+
                                         </View>
                                     </CardSection>
                                 </View>
@@ -163,4 +185,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Comment
+export default MyPostDetails

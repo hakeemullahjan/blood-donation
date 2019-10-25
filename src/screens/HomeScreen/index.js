@@ -6,6 +6,8 @@ import api from '../../config/api'
 import { Appbar, Drawer } from "react-native-paper";
 import { DrawerActions } from 'react-navigation-drawer';
 import moment from 'moment'
+import Toast, { DURATION } from 'react-native-easy-toast'
+
 
 class HomeScreen extends Component {
 
@@ -40,6 +42,26 @@ class HomeScreen extends Component {
             })
     }
 
+    _addVolunteer(post) {
+        const postId = post._id
+        const user = this.state.user
+
+        axios.post(`${api}/post/addvolunteer/${postId}`, {
+            createdAt: Date.now(),
+            bloodGroup: user.bloodGroup,
+            status: "Not Donated",
+            fullName: user.firstName + ' ' + user.lastName,
+            email: user.email,
+        }).then(response => {
+            console.log('volunteer response------>', response.data)
+            this.refs.toast.show('VOLUNTEER ADDED')
+            this.setState({ comment: "" })
+        }).catch(err => {
+            console.log('volunteer error------>', err)
+            this.refs.toast.show(err)
+        })
+    }
+
 
     render() {
         return (
@@ -56,6 +78,7 @@ class HomeScreen extends Component {
 
                 <Card>
                     {!!this.state.posts && this.state.posts.map((item, key) => {
+
                         return (
                             <View key={key} >
                                 <CardSection>
@@ -66,13 +89,13 @@ class HomeScreen extends Component {
                                         </View>
                                         <Text>{item.units} units of {item.bloodGroup} blood required</Text>
                                         <Text>At {item.hospital} for my {item.relation}</Text>
-                                        <Text>Urgency:{item.urgency}</Text>
-                                        <Text>Contacy at:{item.contactNo}</Text>
-                                        <Text>Additional Instructions:{item.contactNo}</Text>
-                                        <Text>Volunteer uptill now:__</Text>
-                                        <Text>Current Requirement:__</Text>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Button>Volunteer</Button>
+                                        <Text>Urgency: {item.urgency}</Text>
+                                        <Text>Contacy at: {item.contactNo}</Text>
+                                        <Text>Additional Instructions: {item.instructions}</Text>
+                                        <Text>Volunteer uptill now: {item.volunteers ? item.volunteers.length : '0'}</Text>
+                                        <Text>Current Requirement: ------> </Text>
+                                        <View style={{ flexDirection: 'row', marginVertical: 5 }}>
+                                            <Button onPress={this._addVolunteer.bind(this, item)}>Volunteer</Button>
                                             <Button onPress={() => this.props.navigation.navigate('Comment', { post: item })}>Comment</Button>
                                         </View>
                                     </View>
@@ -81,6 +104,7 @@ class HomeScreen extends Component {
                         )
                     })}
                 </Card>
+                <Toast ref='toast' position='top' />
 
             </ScrollView>
         )

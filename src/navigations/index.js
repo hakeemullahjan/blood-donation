@@ -102,6 +102,16 @@ const AppNavigator = createStackNavigator({
             }
         }
     },
+    MyPostDetails: {
+        screen: Router.MyPostDetails,
+        navigationOptions: {
+            headerTitle: "My Post Details",
+            headerTintColor: "#fff",
+            headerStyle: {
+                backgroundColor: "#F50041"
+            }
+        }
+    },
     MainScreen: {
         screen: createDrawerNavigator(
             {

@@ -7,6 +7,7 @@ import Notification from './Notification'
 import Settings from './Settings'
 import AuthLoading from './AuthLoading'
 import Comment from './Comment'
+import MyPostDetails from './MyPostDetails'
 
 export {
     Login,
@@ -17,5 +18,6 @@ export {
     Notification,
     Settings,
     AuthLoading,
-    Comment
+    Comment,
+    MyPostDetails
 }
