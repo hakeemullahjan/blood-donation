@@ -93,7 +93,7 @@ class HomeScreen extends Component {
                                         <Text>Contacy at: {item.contactNo}</Text>
                                         <Text>Additional Instructions: {item.instructions}</Text>
                                         <Text>Volunteer uptill now: {item.volunteers ? item.volunteers.length : '0'}</Text>
-                                        <Text>Current Requirement: ------> </Text>
+                                        <Text>Current Requirement: {item.required} </Text>
                                         <View style={{ flexDirection: 'row', marginVertical: 5 }}>
                                             <Button onPress={this._addVolunteer.bind(this, item)}>Volunteer</Button>
                                             <Button onPress={() => this.props.navigation.navigate('Comment', { post: item })}>Comment</Button>

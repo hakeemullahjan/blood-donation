@@ -68,8 +68,8 @@ class Comment extends Component {
                                     <Text>{moment(post.createdAt).fromNow()}</Text>
                                 </View>
                                 <Text>Units required: {post.units}</Text>
-                                <Text>Donation recieved: __</Text>
-                                <Text>Still require: __</Text>
+                                <Text>Donation recieved: {post.recieved}</Text>
+                                <Text>Still require: {post.required}</Text>
                                 <Text>Blood Group: {post.bloodGroup}</Text>
                                 <Text>Location: {post.city} {post.state} {post.country} </Text>
                                 <Text>Hospital: {post.hospital}</Text>

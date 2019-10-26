@@ -70,7 +70,8 @@ class PostRequirement extends Component {
                 relation,
                 email: user.email,
                 fullName: user.firstName + ' ' + user.lastName,
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                required: units
             }).then(response => {
                 console.log('signup response-------', response.data)
                 alert('Blood request successfully posted')

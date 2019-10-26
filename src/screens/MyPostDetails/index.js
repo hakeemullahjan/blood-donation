@@ -31,23 +31,34 @@ class MyPostDetails extends Component {
     _comment() {
         const { post, comment, user } = this.state
         const postId = post._id
-        axios.post(`${api}/post/comment/${postId}`, {
-            comment: comment,
-            createdAt: Date.now(),
-            fullName: user.firstName + ' ' + user.lastName,
-            email: user.email
-        }).then(response => {
-            console.log('post response------>', response.data)
-            this.refs.toast.show('SUCCESSFULLY COMMENTED')
-            this.setState({ comment: "" })
-        }).catch(err => {
-            console.log('comment error------>', err)
-            this.refs.toast.show(err)
-        })
+        const volunteerId =
+            axios.post(`${api}/post/comment/${postId}`, {
+                comment: comment,
+                createdAt: Date.now(),
+                fullName: user.firstName + ' ' + user.lastName,
+                email: user.email
+            }).then(response => {
+                console.log('post response------>', response.data)
+                this.refs.toast.show('SUCCESSFULLY COMMENTED')
+                this.setState({ comment: "" })
+            }).catch(err => {
+                console.log('comment error------>', err)
+                this.refs.toast.show(err)
+            })
     }
 
     _donatedButtonPress(volunteer) {
         const { user, post } = this.state
+        const postId = post._id
+        const volunteerId = volunteer._id
+
+        axios.post(`${api}/post/donated/${postId}/${volunteerId}`, {
+
+        }).then(response => {
+            console.log('donated response------> ', response.data)
+        }).catch(err => {
+            console.log('donated error', err)
+        })
 
 
     }
@@ -77,8 +88,8 @@ class MyPostDetails extends Component {
                                     <Text>{moment(post.createdAt).fromNow()}</Text>
                                 </View>
                                 <Text>Units required: {post.units}</Text>
-                                <Text>Donation recieved: __</Text>
-                                <Text>Still require: __</Text>
+                                <Text>Donation recieved: {post.recieved}</Text>
+                                <Text>Still require: {post.required}</Text>
                                 <Text>Blood Group: {post.bloodGroup}</Text>
                                 <Text>Location: {post.city} {post.state} {post.country} </Text>
                                 <Text>Hospital: {post.hospital}</Text>
