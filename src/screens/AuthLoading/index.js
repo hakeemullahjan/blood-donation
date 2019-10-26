@@ -7,6 +7,8 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
+import firebase from 'react-native-firebase';
+
 
 class AuthLoadingScreen extends React.Component {
     constructor() {
@@ -23,6 +25,52 @@ class AuthLoadingScreen extends React.Component {
         this.props.navigation.navigate(userToken ? 'MainScreen' : 'Auth', { user: userToken });
     };
 
+    async componentDidMount() {
+        this.checkPermission();
+        // this.createNotificationListeners(); //add this line
+    }
+
+
+
+    //1
+    async checkPermission() {
+        const enabled = await firebase.messaging().hasPermission();
+        if (enabled) {
+            console.log('enabled', enabled)
+            this.getToken();
+        } else {
+            console.log('request permission')
+            this.requestPermission();
+        }
+    }
+
+    //3
+    async getToken() {
+        let fcmToken = await AsyncStorage.getItem('fcmToken');
+        console.log('fcmToken---->', fcmToken)
+        if (!fcmToken) {
+            fcmToken = await firebase.messaging().getToken();
+            if (fcmToken) {
+                // user has a device token
+                await AsyncStorage.setItem('fcmToken', fcmToken);
+            }
+        }
+    }
+
+    //2
+    async requestPermission() {
+        try {
+            await firebase.messaging().requestPermission();
+            // User has authorised
+            this.getToken();
+        } catch (error) {
+            // User has rejected permissions
+            console.log('permission rejected');
+        }
+    }
+
+
+
     // Render any loading content that you like here
     render() {
         return (
@@ -32,6 +80,8 @@ class AuthLoadingScreen extends React.Component {
             </View>
         );
     }
+
+
 }
 
 const styles = StyleSheet.create({

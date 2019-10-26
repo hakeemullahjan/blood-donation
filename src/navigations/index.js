@@ -40,7 +40,6 @@ const CustomDrawerComponent = (props) => {
                     </View>
                 }
 
-
                 <Drawer.Item
                     icon='home'
                     label='Home'

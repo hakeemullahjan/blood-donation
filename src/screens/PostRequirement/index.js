@@ -74,13 +74,13 @@ class PostRequirement extends Component {
                 required: units
             }).then(response => {
                 console.log('signup response-------', response.data)
-                alert('Blood request successfully posted')
+                // alert('Blood request successfully posted')
+                this.refs.toast.show('Blood request successfully posted')
                 this.props.navigation.navigate('HomeScreen')
             }).catch(err => {
                 console.log('post error----------->', err)
             })
         }
-
     }
 
 

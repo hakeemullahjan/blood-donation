@@ -55,7 +55,7 @@ class HomeScreen extends Component {
         }).then(response => {
             console.log('volunteer response------>', response.data)
             this.refs.toast.show('VOLUNTEER ADDED')
-            this.setState({ comment: "" })
+
         }).catch(err => {
             console.log('volunteer error------>', err)
             this.refs.toast.show(err)

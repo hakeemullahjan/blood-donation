@@ -14,7 +14,7 @@ class MyPostDetails extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            comment: "",
+
             post: this.props.navigation.getParam('post'),
             user: null
         }
@@ -39,7 +39,7 @@ class MyPostDetails extends Component {
                 email: user.email
             }).then(response => {
                 console.log('post response------>', response.data)
-                this.refs.toast.show('SUCCESSFULLY COMMENTED')
+                this.refs.toast.show(response.data.message)
                 this.setState({ comment: "" })
             }).catch(err => {
                 console.log('comment error------>', err)
@@ -52,18 +52,28 @@ class MyPostDetails extends Component {
         const postId = post._id
         const volunteerId = volunteer._id
 
-        axios.post(`${api}/post/donated/${postId}/${volunteerId}`, {
-
-        }).then(response => {
-            console.log('donated response------> ', response.data)
-        }).catch(err => {
-            console.log('donated error', err)
-        })
-
-
+        console.log(postId, volunteerId)
+        axios.post(`${api}/post/donated/${postId}/${volunteerId}`)
+            .then(response => {
+                console.log('donated response------> ', response.data)
+                this.refs.toast.show(response.data.message)
+            }).catch(err => {
+                console.log('donated error', err)
+            })
     }
-    _notDonatedButtonPress() {
+    _notDonatedButtonPress(volunteer) {
+        const { user, post } = this.state
+        const postId = post._id
+        const volunteerId = volunteer._id
 
+        console.log(postId, volunteerId)
+        axios.post(`${api}/post/notdonated/${postId}/${volunteerId}`)
+            .then(response => {
+                console.log('donated response------> ', response.data)
+                this.refs.toast.show(response.data.message)
+            }).catch(err => {
+                console.log('donated error', err)
+            })
     }
 
 
