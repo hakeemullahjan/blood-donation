@@ -7,13 +7,13 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-import firebase from 'react-native-firebase';
-
+import firebase from 'react-native-firebase'
 
 class AuthLoadingScreen extends React.Component {
     constructor() {
         super();
         this._bootstrapAsync();
+        // this.checkPermission();
     }
 
     // Fetch the token from storage then navigate to our appropriate place
@@ -25,51 +25,45 @@ class AuthLoadingScreen extends React.Component {
         this.props.navigation.navigate(userToken ? 'MainScreen' : 'Auth', { user: userToken });
     };
 
-    async componentDidMount() {
-        this.checkPermission();
-        // this.createNotificationListeners(); //add this line
-    }
 
-
-
-    //1
-    async checkPermission() {
-        const enabled = await firebase.messaging().hasPermission();
-        if (enabled) {
-            console.log('enabled', enabled)
-            this.getToken();
-        } else {
-            console.log('request permission')
-            this.requestPermission();
-        }
-    }
-
-    //3
     async getToken() {
         let fcmToken = await AsyncStorage.getItem('fcmToken');
-        console.log('fcmToken---->', fcmToken)
+        console.log("before fcmToken: ", fcmToken);
         if (!fcmToken) {
             fcmToken = await firebase.messaging().getToken();
             if (fcmToken) {
-                // user has a device token
+                console.log("after fcmToken: ", fcmToken);
                 await AsyncStorage.setItem('fcmToken', fcmToken);
             }
         }
     }
 
-    //2
     async requestPermission() {
-        try {
-            await firebase.messaging().requestPermission();
-            // User has authorised
-            this.getToken();
-        } catch (error) {
-            // User has rejected permissions
-            console.log('permission rejected');
-        }
+        firebase.messaging().requestPermission()
+            .then(() => {
+                this.getToken();
+            })
+            .catch(error => {
+                console.log('permission rejected');
+            });
     }
 
+    async checkPermission() {
+        firebase.messaging().hasPermission()
+            .then(enabled => {
+                if (enabled) {
+                    console.log("Permission granted");
+                    this.getToken();
+                } else {
+                    console.log("Request Permission");
+                    this.requestPermission();
+                }
+            });
+    }
 
+    async componentDidMount() {
+        this.checkPermission();
+    }
 
     // Render any loading content that you like here
     render() {

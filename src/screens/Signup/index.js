@@ -4,6 +4,8 @@ import { Input, Card, CardSection, Button, Spinner } from '../../components/comm
 import api from '../../config/api'
 import axios from 'axios'
 import Toast, { DURATION } from 'react-native-easy-toast'
+import { Dropdown } from 'react-native-material-dropdown';
+
 
 class Signup extends Component {
 
@@ -33,7 +35,8 @@ class Signup extends Component {
                 console.log('signup response-------', response.data)
                 const user = response.data
                 AsyncStorage.setItem('user', JSON.stringify(user));
-                alert('Account successfully created')
+                // alert('Account successfully created')
+                this.refs.toast.show('Account successfully created')
                 this.props.navigation.navigate('MainScreen', { user: JSON.stringify(user) })
             }).catch(err => {
                 console.log('signup error----------->', err)
@@ -43,6 +46,19 @@ class Signup extends Component {
     }
 
     render() {
+        let data = [{
+            value: 'A Positive',
+        }, {
+            value: 'B Positive',
+        }, {
+            value: 'O Nagative',
+        },
+        {
+            value: 'A Negative',
+        },
+        {
+            value: 'B Nagative',
+        }];
         const { containerStyle, createFormContainer, logoContainer, logo, gotoSigninStyle } = styles
         const { firstName, lastName, email, password, bloodGroup } = this.state
         return (
@@ -71,6 +87,19 @@ class Signup extends Component {
 
 
                             <CardSection>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Blood Group'
+                                        data={data}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={bloodGroup}
+                                        onChangeText={value => this.setState({ bloodGroup: value })}
+                                    />
+                                </View>
+                            </CardSection>
+
+                            {/* <CardSection>
                                 <View style={{
                                     height: 40, flex: 1, flexDirection: 'row', alignItems: 'center',
                                 }}>
@@ -94,10 +123,9 @@ class Signup extends Component {
                                         <Picker.Item label='A Negative' value='A Negative' />
                                         <Picker.Item label='B Nagative' value='B Nagative' />
                                         <Picker.Item label='O Negative' value='O Negative' />
-
                                     </Picker>
                                 </View>
-                            </CardSection>
+                            </CardSection> */}
 
 
                             <CardSection>

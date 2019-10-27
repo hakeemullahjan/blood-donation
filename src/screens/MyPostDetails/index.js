@@ -6,6 +6,7 @@ import api from '../../config/api'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios'
 import Toast, { DURATION } from 'react-native-easy-toast'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
 
@@ -76,6 +77,16 @@ class MyPostDetails extends Component {
             })
     }
 
+    _tickButtonPress(post) {
+        const postId = post._id
+        axios.post(`${api}/post/tick/${postId}`)
+            .then(response => {
+                console.log('tick response------> ', response.data)
+                this.refs.toast.show(response.data.message)
+            }).catch(err => {
+                console.log('tick error', err)
+            })
+    }
 
 
 
@@ -92,7 +103,16 @@ class MyPostDetails extends Component {
                     <Card>
                         <CardSection>
                             <View style={{ flex: 1, margin: 5, marginLeft: 15, marginRight: 15 }}>
-                                <Text style={{ marginLeft: 'auto', margin: 5 }} >Tick Button</Text>
+                                {/* <Text style={{ marginLeft: 'auto', margin: 5 }} >Tick Button</Text> */}
+
+                                <TouchableOpacity onPress={this._tickButtonPress.bind(this, post)} style={{ marginLeft: 'auto', margin: 5, borderWidth: 1, borderColor: '#F50041' }}>
+                                    {post.status === 'Not fulfilled' ?
+                                        <MaterialIcons name={'close'} color={'#F50041'} size={33} />
+                                        :
+                                        <MaterialIcons name={'done'} color={'#F50041'} size={33} />
+                                    }
+                                </TouchableOpacity>
+
                                 <View style={{ justifyContent: 'space-between', flexDirection: 'row' }} >
                                     <Text style={{ fontWeight: 'bold' }}>{post.fullName}</Text>
                                     <Text>{moment(post.createdAt).fromNow()}</Text>

@@ -7,9 +7,8 @@ import { Appbar, Drawer } from "react-native-paper";
 import { DrawerActions } from 'react-navigation-drawer';
 import firebase from 'react-native-firebase'
 
+
 class Notification extends Component {
-
-
 
     componentDidMount() {
         // Create a RemoteMessage

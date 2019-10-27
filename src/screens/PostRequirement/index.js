@@ -6,6 +6,7 @@ import api from './../../config/api'
 import { Appbar, Drawer } from "react-native-paper";
 import { DrawerActions } from 'react-navigation-drawer';
 import Toast, { DURATION } from 'react-native-easy-toast'
+import { Dropdown } from 'react-native-material-dropdown';
 
 
 class PostRequirement extends Component {
@@ -74,7 +75,7 @@ class PostRequirement extends Component {
                 required: units
             }).then(response => {
                 console.log('signup response-------', response.data)
-                // alert('Blood request successfully posted')
+                alert('Blood request successfully posted')
                 this.refs.toast.show('Blood request successfully posted')
                 this.props.navigation.navigate('HomeScreen')
             }).catch(err => {
@@ -85,6 +86,20 @@ class PostRequirement extends Component {
 
 
     render() {
+        let data = [{
+            value: 'A Positive',
+        }, {
+            value: 'B Positive',
+        }, {
+            value: 'O Nagative',
+        },
+        {
+            value: 'A Negative',
+        },
+        {
+            value: 'B Nagative',
+        }];
+
         const { containerStyle, createFormContainer, drawerStyle, drawerViewStyle } = styles
         const { bloodGroup, units, urgency, country, state, city, hospital, contactNo, instructions, relation } = this.state
         return (
@@ -104,21 +119,18 @@ class PostRequirement extends Component {
                     <View style={createFormContainer}>
                         <Card>
 
+
+
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={bloodGroup}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ bloodGroup: itemValue })}
-                                    >
-                                        <Picker.Item label="Blood Group" value="" />
-                                        <Picker.Item label="A Positive" value="A Positive" />
-                                        <Picker.Item label='B Positive' value='B Positive' />
-                                        <Picker.Item label='O Nagative' value='O Nagative' />
-                                        <Picker.Item label='A Negative' value='A Negative' />
-                                        <Picker.Item label='B Nagative' value='B Nagative' />
-                                        <Picker.Item label='O Negative' value='O Negative' />
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Blood Group'
+                                        data={data}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={bloodGroup}
+                                        onChangeText={value => this.setState({ bloodGroup: value })}
+                                    />
                                 </View>
                             </CardSection>
 
@@ -126,108 +138,97 @@ class PostRequirement extends Component {
                                 <Input placeholder='e.g 3' label='Units' value={units} returnKeyType='next' onChangeText={text => this.setState({ units: text })} />
                             </CardSection>
 
+
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={urgency}
-                                        style={
-                                            drawerStyle
-                                        }
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ urgency: itemValue })}
-                                    >
-                                        <Picker.Item label="Urgency" value="" />
-                                        <Picker.Item label="Urgent" value="Urgent" />
-                                        <Picker.Item label='Within 5 hours' value='Within 5 hours' />
-                                        <Picker.Item label='Within 12 hours' value='Within 12 hours' />
-                                        <Picker.Item label='Within 24 hours' value='Within 24 hours' />
-                                        <Picker.Item label='Within 2 days' value='Within 2 days' />
-                                        <Picker.Item label='Within Week' value='Within Week' />
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Urgency'
+                                        data={[{ value: 'Urgent' }, { value: 'Within 5 hours' }, { value: 'Within 12 hours' }, { value: 'Within 24 hours' }, { value: 'Within 2 days' }, { value: 'Within Week' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={urgency}
+                                        onChangeText={value => this.setState({ urgency: value })}
+                                    />
                                 </View>
                             </CardSection>
 
 
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={country}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ country: itemValue })}
-                                    >
-                                        <Picker.Item label='Country' value="" />
-                                        <Picker.Item label='Pakistan' value="Pakistan" />
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Country'
+                                        data={[{ value: 'Pakistan' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={country}
+                                        onChangeText={value => this.setState({ country: value })}
+                                    />
                                 </View>
                             </CardSection>
 
 
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={state}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ state: itemValue })}
-                                    >
-                                        <Picker.Item label="State" value="" />
-                                        <Picker.Item label="Sindh" value="Sindh" />
-
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='State'
+                                        data={[{ value: 'Sindh' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={state}
+                                        onChangeText={value => this.setState({ state: value })}
+                                    />
                                 </View>
                             </CardSection>
 
 
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={city}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ city: itemValue })}
-                                    >
-                                        <Picker.Item label="City" value="" />
-                                        <Picker.Item label="Karachi" value="Karachi" />
-
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='City'
+                                        data={[{ value: 'Karachi' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={city}
+                                        onChangeText={value => this.setState({ city: value })}
+                                    />
                                 </View>
                             </CardSection>
 
 
 
 
+
                             <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={hospital}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ hospital: itemValue })}
-                                    >
-                                        <Picker.Item label="Hospital" value="" />
-                                        <Picker.Item label="Indus" value="Indus" />
-                                        <Picker.Item label='Abbasi' value='Abbasi' />
-                                        <Picker.Item label='Ziauddin' value='Ziauddin' />
-                                        <Picker.Item label='Jinnah' value='Jinnah' />
-                                    </Picker>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Hospital'
+                                        data={[{ value: 'Indus Hospital' }, { value: 'Ziauddin Hospital' }, { value: 'Agha Khan Hospital' }, { value: 'Liaquat National Hospital' }, { value: 'OMI' }, { value: 'Jinnah Hospital' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={hospital}
+                                        onChangeText={value => this.setState({ hospital: value })}
+                                    />
                                 </View>
                             </CardSection>
 
-                            <CardSection>
-                                <View style={drawerViewStyle}>
-                                    <Picker
-                                        selectedValue={relation}
-                                        style={drawerStyle}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ relation: itemValue })}
-                                    >
-                                        <Picker.Item label="Relation" value="" />
-                                        <Picker.Item label="Father" value="Father" />
-                                        <Picker.Item label='Brother' value='Brother' />
-                                        <Picker.Item label='Mother' value='Brother' />
-                                        <Picker.Item label='Son' value='Son' />
-                                        <Picker.Item label='Uncle' value='Uncle' />
-                                        <Picker.Item label='Niece' value='Niece' />
-                                        <Picker.Item label='Friend' value='Friend' />
 
-                                    </Picker>
+
+                            <CardSection>
+                                <View style={{ flex: 1, paddingHorizontal: 20 }}>
+                                    <Dropdown
+                                        label='Relation'
+                                        data={[{ value: 'Father' }, { value: 'Mother' }, { value: 'Son' }, { value: 'Daughter' }, { value: 'Uncle' }, { value: 'Nephew' }, { value: 'Niece' }, { value: 'Friend' }]}
+                                        baseColor='#000'
+                                        fontSize={18}
+                                        value={relation}
+                                        onChangeText={value => this.setState({ relation: value })}
+                                    />
                                 </View>
                             </CardSection>
+
+
+
+
 
                             <CardSection>
                                 <Input placeholder='03XXXXXXXXX' value={contactNo} label='Contact no.' returnKeyType='next' onChangeText={text => this.setState({ contactNo: text })} />

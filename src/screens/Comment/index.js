@@ -6,6 +6,7 @@ import api from '../../config/api'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios'
 import Toast, { DURATION } from 'react-native-easy-toast'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
 class Comment extends Component {
@@ -61,7 +62,18 @@ class Comment extends Component {
                     <Card>
                         <CardSection>
                             <View style={{ flex: 1, margin: 5, marginLeft: 15, marginRight: 15 }}>
-                                <Text style={{ marginLeft: 'auto', margin: 5 }} >Star Button</Text>
+                                {/* <Text style={{ marginLeft: 'auto', margin: 5 }} >Star Button</Text> */}
+
+                                <View style={{ marginLeft: 'auto', margin: 5 }}>
+                                    {post.status === 'Not fulfilled' ?
+                                        <MaterialIcons name={'star-border'} color={'#F50041'} size={33} />
+                                        :
+                                        <MaterialIcons name={'star'} color={'#F50041'} size={33} />
+                                    }
+                                </View>
+
+
+
 
                                 <View style={{ justifyContent: 'space-between', flexDirection: 'row' }} >
                                     <Text style={{ fontWeight: 'bold' }}>{post.fullName}</Text>
